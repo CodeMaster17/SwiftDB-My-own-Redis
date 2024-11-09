@@ -46,3 +46,5 @@ admin
 $5
 harshit
 ```
+
+- ‘\r\n’ is called CRLF and it indicates the end of a line.
