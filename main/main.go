@@ -5,6 +5,7 @@ import (
 	"io"
 	"net"
 	"os"
+	"swiftdb/resp"
 )
 
 func main() {
@@ -26,10 +27,10 @@ func main() {
 
 	// creating infinite loop to receive commands from client and respond to them
 	for {
-		buf := make([]byte, 1024)
+		resp := resp.NewResp(conn)
 
 		// read message from client
-		_, err = conn.Read(buf)
+		value, err := resp.Read()
 		if err != nil {
 			if err == io.EOF {
 				break
@@ -37,6 +38,8 @@ func main() {
 			fmt.Println("error reading from the client: ", err.Error())
 			os.Exit(1)
 		}
+
+		fmt.Println(value)
 
 		// ignore request and send back pong
 		conn.Write([]byte("+OK\r\n"))
