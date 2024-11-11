@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"net"
-	"os"
 	"swiftdb/resp"
 )
 
 func main() {
+	fmt.Println("Listening on port :6379")
+
 	// TCP listener so that client can communicate with it
 	l, err := net.Listen("tcp", ":6379")
 	if err != nil {
@@ -27,21 +27,16 @@ func main() {
 
 	// creating infinite loop to receive commands from client and respond to them
 	for {
-		resp := resp.NewResp(conn)
-
-		// read message from client
-		value, err := resp.Read()
+		response := resp.NewResp(conn)
+		value, err := response.Read()
 		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			fmt.Println("error reading from the client: ", err.Error())
-			os.Exit(1)
+			fmt.Println(err)
+			return
 		}
 
-		fmt.Println(value)
+		_ = value
 
-		// ignore request and send back pong
-		conn.Write([]byte("+OK\r\n"))
+		writer := resp.NewWriter(conn)
+		writer.Write(resp.NewValue("string", "OK", 0, "", nil))
 	}
 }
