@@ -1,4 +1,4 @@
-SwiftDB - My own Redis
+# SwiftDB - My own Redis
 
 ## What is Redis?
 
