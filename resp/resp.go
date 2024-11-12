@@ -152,9 +152,9 @@ func (r *Resp) readBulk() (Value, error) {
 
 func (v Value) Marshal() []byte {
 	switch v.Typ {
-	case "Array":
+	case "array":
 		return v.marshalArray()
-	case "Bulk":
+	case "bulk":
 		return v.marshalBulk()
 	case "string":
 		return v.marshalString()

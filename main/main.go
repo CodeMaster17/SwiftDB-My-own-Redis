@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 	"strings"
+	"swiftdb/aof"
 	"swiftdb/handler"
 	"swiftdb/resp"
 )
@@ -17,6 +18,27 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+
+	// aof
+	aof, err := aof.NewAof("database.aof")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer aof.Close()
+
+	aof.Read(func(value resp.Value) {
+		command := strings.ToUpper(value.Array[0].Bulk)
+		args := value.Array[1:]
+
+		handler, ok := handler.Handlers[command]
+		if !ok {
+			fmt.Println("Invalid command: ", command)
+			return
+		}
+
+		handler(args)
+	})
 
 	conn, err := l.Accept()
 	if err != nil {
@@ -78,6 +100,18 @@ func main() {
 			writer.Write(resp.Value{Typ: "string"})
 			continue
 		}
+
+		// if command == "SET" || command == "HSET" {
+		// }
+		aof.Write(value)
+
+		// with this to add error handling and logging
+		if err := aof.Write(value); err != nil {
+			fmt.Println("Failed to write to AOF:", err)
+		} else {
+			fmt.Println("AOF Write successful for command:", command)
+		}
+
 		result := handler(args)
 		writer.Write(result)
 	}
