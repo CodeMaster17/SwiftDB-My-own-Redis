@@ -10,5 +10,10 @@ SwiftDB is a in-memory key-value store that is inspired by Redis. It is written 
 
 It uses the same commands and PORT as Redis, so you can use the same Redis clients to interact with SwiftDB.
 
+## Working sample
+(Will be uploading video soon)
+<img width="1440" alt="image" src="https://github.com/user-attachments/assets/c94184e8-56ac-4395-857f-a960102d5cb9">
+
+
 
 <img width="606" alt="image" src="https://github.com/user-attachments/assets/d4cfb618-09fb-44a9-b626-be12bbf4016d">
